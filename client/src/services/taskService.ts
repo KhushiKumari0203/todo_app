@@ -1,8 +1,7 @@
-// client/src/services/taskService.ts
 import { Task } from '../types/Task';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-const API_URL = `${API_BASE_URL}/tasks`; // Final endpoint
+// 👇 Replace localhost with your Render backend URL
+const API_URL = "https://todo-app-backend-t0dg.onrender.com/tasks";
 
 export const getTasks = async (): Promise<Task[]> => {
   try {
