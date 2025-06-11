@@ -5,10 +5,8 @@ import {
   updateTask,
   deleteTask,
 } from '../controllers/taskController';
-// import { authenticate } from '../middleware/authMiddleware'; // 🔒 Disabled for testing
 
 const router = express.Router();
-// router.use(authenticate); // 🔓 Temporarily disabled for testing without login
 
 router.get('/', getTasks);
 router.post('/', addTask);
