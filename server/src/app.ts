@@ -5,28 +5,18 @@ import authRoutes from './routes/authRoutes';
 
 const app = express();
 
-// ✅ MIDDLEWARE must be first
+// ✅ JSON and CORS middleware must be first
 app.use(cors());
-app.use(express.json()); // ✅ JSON parser - must be above logging or routes
+app.use(express.json());
 
-// ✅ LOGGING middleware to debug raw body
-app.use((req, res, next) => {
+// ✅ Basic logging that does NOT consume body
+app.use((req, _res, next) => {
   console.log(`📥 Incoming Request: ${req.method} ${req.url}`);
-  let body = '';
-  req.on('data', chunk => body += chunk);
-  req.on('end', () => {
-    console.log('📦 Raw Request Body:', body);
-    try {
-      const parsed = JSON.parse(body);
-      console.log('✅ Parsed Request Body:', parsed); // 👈 This should match
-    } catch (e) {
-      console.log('❌ Could not parse body');
-    }
-    next();
-  });
+  console.log('📦 Parsed Request Body:', req.body);
+  next();
 });
 
-app.use('/auth', authRoutes);   // ✅ routes below middleware
+app.use('/auth', authRoutes);
 app.use('/tasks', taskRoutes);
 
 app.get('/', (_req, res) => {
