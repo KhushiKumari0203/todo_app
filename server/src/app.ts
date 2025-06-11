@@ -11,5 +11,8 @@ app.use(express.json());
 
 app.use('/tasks', taskRoutes);
 app.use('/auth', authRoutes); // For login/register
+app.get('/', (req, res) => {
+  res.send('Server is live!');
+});
 
 export default app;
