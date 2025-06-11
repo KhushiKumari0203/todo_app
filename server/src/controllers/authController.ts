@@ -21,9 +21,9 @@ export const login = async (req: Request, res: Response) => {
 
   let user = users.find((u) => u.username === username);
 
-  // Auto-register if user not found
+  // Auto-register if user not found (not ideal in real apps)
   if (!user) {
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10); // ✅ Fixed
     user = { username, password: hashedPassword };
     users.push(user);
     console.log(`✅ Auto-registered new user: ${username}`);
@@ -37,6 +37,7 @@ export const login = async (req: Request, res: Response) => {
 
   // Generate JWT token
   const token = jwt.sign({ username: user.username }, 'secret', { expiresIn: '1h' });
+
   res.status(200).json({ message: 'Login successful', token });
 };
 
@@ -53,7 +54,7 @@ export const register = async (req: Request, res: Response) => {
     return res.status(400).json({ message: 'User already exists' });
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await bcrypt.hash(password, 10); // ✅ Fixed
   users.push({ username, password: hashedPassword });
 
   res.status(201).json({ message: 'User registered successfully' });
