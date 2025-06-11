@@ -1,21 +1,35 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { loginUser } from '../services/authService';
 
 const Login = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState(''); // ✅ was "email", now "username"
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+
     try {
-      const data = await loginUser(username, password);
-      localStorage.setItem('token', data.token);
-      navigate('/home');
-    } catch (err) {
-      setError('Invalid credentials. Try again.');
+      const response = await fetch('https://todo-app-backend-t0dg.onrender.com/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }), // ✅ MATCHES backend
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Login failed');
+      }
+
+      localStorage.setItem('token', data.token); // ✅ Save JWT
+      navigate('/home'); // ✅ Redirect after login
+    } catch (err: any) {
+      setError(err.message || 'Invalid credentials');
     }
   };
 
