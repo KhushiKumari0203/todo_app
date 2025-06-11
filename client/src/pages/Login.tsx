@@ -1,21 +1,19 @@
-// client/src/pages/Login.tsx
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../services/authService';
 
 const Login = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const data = await loginUser(email, password);
-      localStorage.setItem('token', data.token); // save token
-      navigate('/home'); // redirect after login
+      const data = await loginUser(username, password);
+      localStorage.setItem('token', data.token);
+      navigate('/home');
     } catch (err) {
       setError('Invalid credentials. Try again.');
     }
@@ -27,10 +25,10 @@ const Login = () => {
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <form onSubmit={handleLogin}>
         <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           required
         /><br />
         <input
