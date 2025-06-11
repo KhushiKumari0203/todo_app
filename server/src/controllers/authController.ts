@@ -12,6 +12,8 @@ interface User {
 const users: User[] = [];
 
 export const login = async (req: Request, res: Response) => {
+  console.log("BODY RECEIVED IN LOGIN:", req.body); // ✅ Added for debugging
+
   const { username, password } = req.body;
 
   // Input validation
@@ -23,7 +25,7 @@ export const login = async (req: Request, res: Response) => {
 
   // Auto-register if user not found (not ideal in real apps)
   if (!user) {
-    const hashedPassword = await bcrypt.hash(password, 10); // ✅ Fixed
+    const hashedPassword = await bcrypt.hash(password, 10);
     user = { username, password: hashedPassword };
     users.push(user);
     console.log(`✅ Auto-registered new user: ${username}`);
@@ -42,6 +44,8 @@ export const login = async (req: Request, res: Response) => {
 };
 
 export const register = async (req: Request, res: Response) => {
+  console.log("BODY RECEIVED IN REGISTER:", req.body); // ✅ Added for debugging
+
   const { username, password } = req.body;
 
   // Input validation
@@ -54,7 +58,7 @@ export const register = async (req: Request, res: Response) => {
     return res.status(400).json({ message: 'User already exists' });
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10); // ✅ Fixed
+  const hashedPassword = await bcrypt.hash(password, 10);
   users.push({ username, password: hashedPassword });
 
   res.status(201).json({ message: 'User registered successfully' });
