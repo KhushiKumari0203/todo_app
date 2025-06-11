@@ -1,4 +1,4 @@
-// FILE: src/app.ts
+// src/app.ts
 
 import express from 'express';
 import cors from 'cors';
@@ -7,24 +7,30 @@ import authRoutes from './routes/authRoutes';
 
 const app = express();
 
-// ✅ Middleware: CORS and JSON body parser
+// ✅ MIDDLEWARE ORDER MATTERS
 app.use(cors());
-app.use(express.json());
+app.use(express.json()); // <-- Make sure this comes before routes
 
-// ✅ Debug middleware to inspect body
+// ✅ DEBUG: Log raw body
 app.use((req, res, next) => {
-  console.log('📥 Incoming Request:', req.method, req.url);
-  console.log('📦 Request Body:', req.body);
-  next();
+  console.log(`📥 Incoming Request: ${req.method} ${req.url}`);
+  if (['POST', 'PUT', 'PATCH'].includes(req.method)) {
+    let data = '';
+    req.on('data', chunk => (data += chunk));
+    req.on('end', () => {
+      console.log('📦 Raw Request Body:', data);
+      next();
+    });
+  } else {
+    next();
+  }
 });
 
-// ✅ Routes
-app.use('/tasks', taskRoutes);
 app.use('/auth', authRoutes);
+app.use('/tasks', taskRoutes);
 
-// ✅ Health check
 app.get('/', (req, res) => {
-  res.send('✅ Server is live!');
+  res.send('Server is live!');
 });
 
 export default app;
