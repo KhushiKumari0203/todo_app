@@ -1,3 +1,5 @@
+// FILE: src/pages/Login.tsx
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,6 +15,8 @@ const Login = () => {
     setError('');
     setLoading(true);
 
+    console.log('🚀 Attempting login with:', { username, password });
+
     try {
       const response = await fetch('https://todo-app-backend-t0dg.onrender.com/auth/login', {
         method: 'POST',
@@ -23,6 +27,7 @@ const Login = () => {
       });
 
       const data = await response.json();
+      console.log('📬 Response from server:', data);
 
       if (!response.ok) {
         throw new Error(data.message || 'Login failed');
@@ -31,6 +36,7 @@ const Login = () => {
       localStorage.setItem('token', data.token);
       navigate('/home');
     } catch (err: any) {
+      console.error('❌ Login error:', err);
       setError(err.message || 'Something went wrong.');
     } finally {
       setLoading(false);
